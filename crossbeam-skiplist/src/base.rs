@@ -926,9 +926,10 @@ where
                     if let Some(r) = search.found {
                         if r.mark_tower() {
                             self.hot_data.len.fetch_sub(1, Ordering::Relaxed);
+                            break false;
                         }
                     }
-                    break search.found.is_none();
+                    break true;
                 }
 
                 // We failed. Let's search for the key and try again.
