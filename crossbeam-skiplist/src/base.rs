@@ -1159,8 +1159,10 @@ where
                             break;
                         }
                     }
+                    return Some(entry);
+                } else {
+                    return None;
                 }
-                return Some(entry);
             }
         }
     }
