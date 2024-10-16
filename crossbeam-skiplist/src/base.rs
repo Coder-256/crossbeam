@@ -906,7 +906,7 @@ where
             // Optimistically increment `len`.
             self.hot_data.len.fetch_add(1, Ordering::Relaxed);
 
-            loop {
+            let did_insert = loop {
                 // Set the lowest successor of `n` to `search.right[0]`.
                 n.tower[0].store(search.right[0], Ordering::Relaxed);
 
@@ -928,7 +928,7 @@ where
                             self.hot_data.len.fetch_sub(1, Ordering::Relaxed);
                         }
                     }
-                    break;
+                    break search.found.is_none();
                 }
 
                 // We failed. Let's search for the key and try again.
@@ -962,7 +962,7 @@ where
                         // just now removed the node.
                     }
                 }
-            }
+            };
 
             // The new node was successfully installed. Let's create an entry associated with it.
             let entry = RefEntry {
@@ -1063,7 +1063,7 @@ where
             }
 
             // Finally, return the new entry.
-            (entry, true)
+            (entry, did_insert)
         }
     }
 }
